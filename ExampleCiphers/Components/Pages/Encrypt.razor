@@ -1,0 +1,182 @@
+﻿@page "/encrypt"
+
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Cryptography;
+@using System.Text
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Encrypt</PageTitle>
+
+<h1>Encrypt plaintext</h1>
+
+<div class="row">
+	<div class="col-md-4">
+		<section>
+			<EditForm Model="Input" method="post" OnValidSubmit="EncryptPlainText" FormName="encrypt">
+				<DataAnnotationsValidator />
+				<ValidationSummary class="text-danger" role="alert" />
+				<div class="form-floating mb-3">
+					<InputTextArea @bind-Value="Input.PlainText" class="form-control" aria-required="true" />
+					<label for="plainText" class="form-label">PlainText</label>
+					<ValidationMessage For="() => Input.PlainText" class="text-danger" />
+				</div>
+				<ValidationSummary class="text-danger" role="alert" />
+				<div class="form-floating mb-3">
+					<InputSelect @bind-Value="Input.Algorithm" class="form-control" aria-required="true">
+						<option value="">
+							Select algorithm ...
+						</option>
+						<option checked="@(Input.Algorithm == "AES")"
+								value="AES">
+							AES
+						</option>
+						<option checked="@(Input.Algorithm == "AES-GCM")"
+								value="AES-GCM">
+							AES-GCM
+						</option>
+						<option checked="@(Input.Algorithm == "AES-SPAN")"
+								value="AES-SPAN">
+							AES-SPAN
+						</option>
+						<option checked="@(Input.Algorithm == "RSA")"
+								value="RSA">
+							RSA
+						</option>
+					</InputSelect>
+					<label for="plainText" class="form-label">PlainText</label>
+					<ValidationMessage For="() => Input.PlainText" class="text-danger" />
+				</div>
+				<div>
+					<button type="submit" class="w-100 btn btn-lg btn-primary">Encrypt</button>
+				</div>
+			</EditForm>
+		</section>
+	</div>
+	<div class="col-md-6 col-md-offset-2">
+		<section>
+			CipherText: <p>@CipherText</p>
+			Nonce: <p>@Nonce</p>
+			Tag: <p>@Tag</p>
+			Key: <p>@Key</p>
+			CombinedSpan: <p>@CombinedSpan</p>
+		</section>
+	</div>
+</div>
+
+@code {
+	private string? errorMessage;
+
+	[CascadingParameter]
+	private HttpContext HttpContext { get; set; } = default!;
+
+	[SupplyParameterFromForm]
+	private InputModel Input { get; set; } = new();
+
+	private string CipherText { get; set; } = string.Empty;
+	private string Nonce { get; set; } = string.Empty;
+	private string Tag { get; set; } = string.Empty;
+	private string Key { get; set; } = string.Empty;
+	private string CombinedSpan { get; set; } = string.Empty;
+
+	public void EncryptPlainText()
+	{
+		using (MemoryStream ms = new MemoryStream())
+		{
+			if (Input.Algorithm == "AES")
+			{
+				using (Aes aes = Aes.Create())
+				{
+					var key = new byte[32];
+					RandomNumberGenerator.Fill(key);
+
+					byte[] iv = aes.IV;
+					ms.Write(iv, 0, iv.Length);
+
+					using (CryptoStream cs = new(ms, aes.CreateEncryptor(), CryptoStreamMode.Write))
+					{
+						using (StreamWriter es = new(cs))
+						{
+							es.Write(Input.PlainText);
+						}
+					}
+
+					byte[] encryptedBytes = ms.ToArray();
+					CipherText = Convert.ToBase64String(encryptedBytes);
+					Key = Convert.ToBase64String(aes.Key);
+				}
+			}
+			else if (Input.Algorithm == "AES-GCM")
+			{
+				// generate a key
+				var key = new byte[32];
+				RandomNumberGenerator.Fill(key);
+
+				using (var aes = new AesGcm(key))
+				{
+					var nonce = new byte[AesGcm.NonceByteSizes.MaxSize];
+					RandomNumberGenerator.Fill(nonce);
+
+					var tag = new byte[AesGcm.TagByteSizes.MaxSize];
+
+					var plaintextBytes = Encoding.UTF8.GetBytes(Input.PlainText);
+					var ciphertext = new byte[plaintextBytes.Length];
+
+					aes.Encrypt(nonce, plaintextBytes, ciphertext, tag);
+
+					CipherText = Convert.ToBase64String(ciphertext);
+					Nonce = Convert.ToBase64String(nonce);
+					Tag = Convert.ToBase64String(tag);
+					Key = Convert.ToBase64String(key);
+					//return (ciphertext, nonce, tag);
+
+				}
+			}
+			else if (Input.Algorithm == "AES-SPAN")
+			{
+				// generate a key
+				var key = new byte[32];
+				RandomNumberGenerator.Fill(key);
+				Key = Convert.ToBase64String(key);
+				var data = Encoding.UTF8.GetBytes(Input.PlainText);
+
+				using (var aes = new AesGcm(key, AesGcm.TagByteSizes.MaxSize))
+				{
+					// AesGcm.NonceByteSizes.MaxSize = 12 bytes
+					// AesGcm.TagByteSizes.MaxSize = 16 bytes
+					Span<byte> buffer = new byte[data.Length + AesGcm.NonceByteSizes.MaxSize + AesGcm.TagByteSizes.MaxSize];
+					var nonce = buffer.Slice(data.Length, AesGcm.NonceByteSizes.MaxSize);
+					RandomNumberGenerator.Fill(nonce);
+					aes.Encrypt(nonce, data, buffer.Slice(0, data.Length), buffer.Slice(data.Length + AesGcm.NonceByteSizes.MaxSize, AesGcm.TagByteSizes.MaxSize));
+					// buffer has encrypted data bytes + 12 bytes of Nonce + 16 bytes of Tag
+					CombinedSpan = Convert.ToBase64String(buffer);
+				}
+			}
+			else if (Input.Algorithm == "RSA")
+			{
+
+				using (var rsa = RSA.Create(3072)) // 3072, which gives you 128-bit security.
+				{
+					var plainBytes = Encoding.UTF8.GetBytes(Input.PlainText);
+
+					// Export the public key
+					var privateKey = rsa.ExportRSAPrivateKey();
+					var cipherBytes = rsa.Encrypt(plainBytes, RSAEncryptionPadding.OaepSHA3_256);
+					CipherText = Convert.ToBase64String(cipherBytes);
+					Key = Convert.ToBase64String(privateKey);
+				}
+
+			}
+		}
+
+	}
+
+	private sealed class InputModel
+	{
+		[Required]
+		public string PlainText { get; set; } = string.Empty;
+
+		[Required]
+		public string Algorithm { get; set; } = string.Empty;
+	}
+
+}
