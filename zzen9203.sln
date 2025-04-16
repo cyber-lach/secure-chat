@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35913.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleECDH", "ExampleECDH\ExampleECDH.csproj", "{8FD7E4FC-86D2-4D1F-8735-B1761827E132}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleRSA", "ExampleRSA\ExampleRSA.csproj", "{BEDC92AA-10A6-441F-B411-CBEBDCEDE0D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureChat.Server", "SecureChat.Server\SecureChat.Server.csproj", "{EAB44C3E-A401-4C8B-B502-A8868B3BAF32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureChat.Crypto", "SecureChat.Crypto\SecureChat.Crypto.csproj", "{6B897019-D00E-4835-B9E7-A9CE395027FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCiphers", "ExampleCiphers\ExampleCiphers.csproj", "{5970B722-A16A-4148-8D43-18C62BB1EBEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureChat.Client", "SecureChat.Client\SecureChat.Client.csproj", "{F8B34561-4821-4B9A-BA63-B9BF576A4835}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8FD7E4FC-86D2-4D1F-8735-B1761827E132}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD7E4FC-86D2-4D1F-8735-B1761827E132}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD7E4FC-86D2-4D1F-8735-B1761827E132}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD7E4FC-86D2-4D1F-8735-B1761827E132}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEDC92AA-10A6-441F-B411-CBEBDCEDE0D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEDC92AA-10A6-441F-B411-CBEBDCEDE0D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEDC92AA-10A6-441F-B411-CBEBDCEDE0D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEDC92AA-10A6-441F-B411-CBEBDCEDE0D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAB44C3E-A401-4C8B-B502-A8868B3BAF32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB44C3E-A401-4C8B-B502-A8868B3BAF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB44C3E-A401-4C8B-B502-A8868B3BAF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB44C3E-A401-4C8B-B502-A8868B3BAF32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B897019-D00E-4835-B9E7-A9CE395027FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B897019-D00E-4835-B9E7-A9CE395027FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B897019-D00E-4835-B9E7-A9CE395027FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B897019-D00E-4835-B9E7-A9CE395027FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5970B722-A16A-4148-8D43-18C62BB1EBEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5970B722-A16A-4148-8D43-18C62BB1EBEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5970B722-A16A-4148-8D43-18C62BB1EBEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5970B722-A16A-4148-8D43-18C62BB1EBEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8B34561-4821-4B9A-BA63-B9BF576A4835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8B34561-4821-4B9A-BA63-B9BF576A4835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8B34561-4821-4B9A-BA63-B9BF576A4835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8B34561-4821-4B9A-BA63-B9BF576A4835}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {523211CF-F202-49A0-BB8E-7BB1792CE42A}
+	EndGlobalSection
+EndGlobal
